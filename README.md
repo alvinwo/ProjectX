@@ -20,6 +20,7 @@ But there is a critical risk that when someone is gone, this guy may don't have 
 
 So we propose to build a decentralized wallet to hold users accessts. The wallet client would just be the wallet reviewer or private key keeper.
 
+定投，发工资，遗嘱
 
 ### How it work
 
