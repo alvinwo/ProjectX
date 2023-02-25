@@ -1,5 +1,10 @@
 # Decentralized Auto Trading Platform
+
+Author: Alvin Wo
+Date: 2023-02-25
+
 ## Introduction
+
 This project is an automated trading execution system based on the Ethereum blockchain. Users can deploy their own trading execution contracts and submit trading rules and execution conditions. When the conditions are met, the system will automatically execute the trade, eliminating the need for users to constantly monitor their devices or rely on centralized exchanges. Users have full control and can open their own decentralized automated trading system, equivalent to having their own automated investment trading engine, trust fund, and decentralized will execution program.
 
 In addition, this system is an open automated trading system, and users can develop more efficient, convenient, and secure usage scenarios.
@@ -11,7 +16,9 @@ In addition, this system is an open automated trading system, and users can deve
 4. When the conditions are met, external miners interact with your contract as a trigger to execute specific trading tasks.
 
 ## Implementation
-The automated trading smart contract of this system will become a standard ERC on Ethereum. Miners can obtain all information about automated trading contracts and their automated trading tasks through the program interface provided by the platform or by scanning the contract interface on Ethereum. When the conditions of automated trading tasks are met, miners submit requests to trigger the execution of the transaction through competition. The contract will execute the first transaction request received and reward the miner who submitted the transaction.
+The automated trading smart contract of this system will become a standard ERC on Ethereum. Miners can obtain all information about automated trading contracts and their automated trading tasks through the program interface provided by the platform or by scanning the contract interface on Ethereum. When the conditions of automated trading tasks are met, miners submit requests to trigger the execution of the transaction through competition. The contract will execute the first transaction request received and reward the miners who submitted the transaction.
+
+![image](images/projectx.drawio.png)
 
 ## Fees
 The platform does not charge any fees for users to deploy automated trading contracts on Ethereum or manage automated trading tasks in the contract. Users only need to pay gas fees (or the platform can consider paying gas fees). Each time an automated trading transaction is executed, the platform will charge a portion of the transaction fee, which will be used to reward community participants, including users, miners, and developers. Transaction fees support ETH and stablecoins, and the price of fees depends on the type of transaction.
