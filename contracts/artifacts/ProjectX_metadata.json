@@ -1,0 +1,105 @@
+{
+	"compiler": {
+		"version": "0.8.6+commit.11564f7e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "deposit",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdraw",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/ProjectX.sol": "ProjectX"
+		},
+		"evmVersion": "berlin",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/CrontabInterface.sol": {
+			"keccak256": "0x95c6404dbec09420a803c058922c98f176289a8f03d02d271d4977f1903bb6ef",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f23de329fbeac6032a2b183e4011690d946f763518afc0b817a9ce0157a14038",
+				"dweb:/ipfs/QmYHCTEsrqEWUFKpkLbTTq72sp3oW3EmQ64Qab6qyP8e4m"
+			]
+		},
+		"contracts/ProjectX.sol": {
+			"keccak256": "0x7b6d8547e91eea411f14b8630fab868fd19507341e71c168b1ffe9422ffa55c1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://09dce0082b5c0dd007b71fb100f31f8521902da64e07a75bb6563a193c0135d1",
+				"dweb:/ipfs/QmdJB5eruuzE5RMeq1Xosr1YtWfoXXJc7Z18x5smFrbgqL"
+			]
+		}
+	},
+	"version": 1
+}
