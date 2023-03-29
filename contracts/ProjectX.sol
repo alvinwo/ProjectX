@@ -22,7 +22,7 @@ contract ProjectX is CrontabInterface {
      * @dev Throws if called by any account other than the owner.
      */
     modifier onlyOwner() {
-        require(msg.sender == _owner);
+        require(msg.sender == _owner, 'This method is only for the owner.');
         _;
     }
 
