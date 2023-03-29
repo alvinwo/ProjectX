@@ -6,9 +6,210 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "bool",
+						"name": "withdrawAble",
+						"type": "bool"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "actionId",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "enum CrontabInterface.ActionType",
+								"name": "actionType",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "targetAddress",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "value",
+								"type": "uint256"
+							}
+						],
+						"indexed": false,
+						"internalType": "struct CrontabInterface.ActionDefinition",
+						"name": "action",
+						"type": "tuple"
+					}
+				],
+				"name": "ActionAdded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Deposit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "Withdraw",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "_owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum CrontabInterface.ActionType",
+						"name": "actionType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "targetAddress",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "createAction",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "enum CrontabInterface.ConditionType",
+						"name": "conditionType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timeInterval",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "blockNumberInterval",
+						"type": "uint256"
+					}
+				],
+				"name": "createCondition",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reward",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "expiration",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "conditions",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "actions",
+						"type": "uint256[]"
+					}
+				],
+				"name": "createJob",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -31,20 +232,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "owner",
-				"outputs": [
+				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
 					}
 				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "withdraw",
 				"outputs": [
 					{
@@ -85,19 +279,19 @@
 	},
 	"sources": {
 		"contracts/CrontabInterface.sol": {
-			"keccak256": "0x95c6404dbec09420a803c058922c98f176289a8f03d02d271d4977f1903bb6ef",
+			"keccak256": "0xc3f527fccb3c07f9308c0b4cb1a20e6f4bc2270e2580bb0f571e99b9b57cc9cb",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f23de329fbeac6032a2b183e4011690d946f763518afc0b817a9ce0157a14038",
-				"dweb:/ipfs/QmYHCTEsrqEWUFKpkLbTTq72sp3oW3EmQ64Qab6qyP8e4m"
+				"bzz-raw://11de97e773194d00c0e1619738051661aaec35c5aead32348932677e939c42fa",
+				"dweb:/ipfs/QmeyM1w6Vwjd8GsR74FavZYdxUQLjJmUannuyt36DTstKC"
 			]
 		},
 		"contracts/ProjectX.sol": {
-			"keccak256": "0x7b6d8547e91eea411f14b8630fab868fd19507341e71c168b1ffe9422ffa55c1",
+			"keccak256": "0x1ae7f63494aa8f36e7577184f8f361c0247330ac0202630e09a8e77846e84698",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09dce0082b5c0dd007b71fb100f31f8521902da64e07a75bb6563a193c0135d1",
-				"dweb:/ipfs/QmdJB5eruuzE5RMeq1Xosr1YtWfoXXJc7Z18x5smFrbgqL"
+				"bzz-raw://40103fefb4acdaefb7abbe45d54fb4f0e03357d81e4f0c4cde619abad1fa0baf",
+				"dweb:/ipfs/QmdbVK7W2jCuvgGvyt3dz3ckpBpgtJxX5HzWRRxFzJqVLZ"
 			]
 		}
 	},

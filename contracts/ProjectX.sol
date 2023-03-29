@@ -6,6 +6,12 @@ import "./CrontabInterface.sol";
 contract ProjectX is CrontabInterface {
     address public _owner;
     bool _withdrawAble;
+    mapping(uint => Job) _jobs;
+    mapping(uint => ConditionDefinition) _conditions;
+    mapping(uint => ActionDefinition) _actions;
+    uint _nextJobId;
+    uint _nextConditionId;
+    uint _nextActionId;
 
     constructor(bool withdrawAble) {
         _owner = msg.sender;
@@ -27,18 +33,56 @@ contract ProjectX is CrontabInterface {
     //     _;
     // }
 
-    // function createJob(
-    //     JobData memory data,
-    //     ConditionOperator operator,
-    //     ConditionDefinition[] memory conditions
-    // ) external override onlyOwner returns (uint) {
-    //     uint jobId = jobNum + 1;
-    //     ConditionSet memory conditionSet = ConditionSet({conditionSize: 0});
-    //     Job memory job = Job(jobId, data, conditions, true, 0, 0);
-    //     jobs[jobId] = job;
-    //     // emit JobAdded(msg.sender, job);
-    //     return jobId;
-    // }
+    function createCondition(
+        ConditionType conditionType,
+        uint256 timeInterval,
+        uint256 blockNumberInterval
+    ) external override returns (uint) {
+        _conditions[_nextConditionId] = ConditionDefinition(
+            conditionType,
+            timeInterval,
+            blockNumberInterval
+        );
+        return _nextConditionId++;
+    }
+
+    function createAction(
+        ActionType actionType,
+        address targetAddress,
+        uint256 value
+    ) external override returns (uint) {
+        ActionDefinition memory action = ActionDefinition(
+            actionType,
+            targetAddress,
+            value
+        );
+        _actions[_nextActionId] = action;
+        emit ActionAdded(msg.sender, _nextActionId, action);
+        return _nextActionId++;
+    }
+
+    function createJob(
+        string memory title,
+        string memory description,
+        uint256 reward,
+        uint256 expiration,
+        uint[] memory conditions,
+        uint[] memory actions
+    ) external override onlyOwner returns (uint) {
+        Job memory job = Job(
+            true,
+            title,
+            description,
+            reward,
+            expiration,
+            0,
+            0,
+            conditions,
+            actions
+        );
+        _jobs[_nextJobId] = job;
+        return _nextJobId++;
+    }
 
     // function manageJob(
     //     uint jobId,
@@ -51,11 +95,13 @@ contract ProjectX is CrontabInterface {
     //     // emit JobModified(msg.sender, job);
     // }
 
-    function deposit() external override payable {
+    function deposit() external payable override {
         emit Deposit(msg.sender, msg.value);
     }
 
-    function withdraw(uint256 value) external override onlyOwner returns (bool) {
+    function withdraw(
+        uint256 value
+    ) external override onlyOwner returns (bool) {
         require(_withdrawAble, "It's not allowed to withdraw.");
         address payable self = payable(address(this));
         uint256 balance = self.balance;
@@ -65,7 +111,7 @@ contract ProjectX is CrontabInterface {
         return true;
     }
 
-    function getOwner() external override view returns (address) {
+    function getOwner() external view override returns (address) {
         return _owner;
     }
 
