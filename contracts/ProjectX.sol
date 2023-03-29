@@ -37,12 +37,14 @@ contract ProjectX is CrontabInterface {
         ConditionType conditionType,
         uint256 timeInterval,
         uint256 blockNumberInterval
-    ) external override returns (uint) {
-        _conditions[_nextConditionId] = ConditionDefinition(
+    ) external override onlyOwner returns (uint) {
+        ConditionDefinition memory condition = ConditionDefinition(
             conditionType,
             timeInterval,
             blockNumberInterval
         );
+        _conditions[_nextConditionId] = condition;
+        emit ConditionAdded(msg.sender, _nextConditionId, condition);
         return _nextConditionId++;
     }
 
@@ -50,7 +52,7 @@ contract ProjectX is CrontabInterface {
         ActionType actionType,
         address targetAddress,
         uint256 value
-    ) external override returns (uint) {
+    ) external override onlyOwner returns (uint) {
         ActionDefinition memory action = ActionDefinition(
             actionType,
             targetAddress,

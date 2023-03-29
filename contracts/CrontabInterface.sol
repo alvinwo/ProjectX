@@ -88,6 +88,7 @@ interface CrontabInterface {
     event Deposit(address indexed owner, uint256 value);
     event Withdraw(address indexed owner, uint256 value);
     event ActionAdded(address indexed owner, uint actionId, ActionDefinition action);
+    event ConditionAdded(address indexed owner, uint conditionId, ConditionDefinition condition);
     // event JobAdded(address indexed _owner, Job job);
     // event JobModified(address indexed _owner, Job job);
     // event JobRemoved(address indexed _owner, Job job);
