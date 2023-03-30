@@ -83,6 +83,7 @@ contract ProjectX is CrontabInterface {
             actions
         );
         _jobs[_nextJobId] = job;
+        emit JobAdded(_owner, _nextJobId, job);
         return _nextJobId++;
     }
 

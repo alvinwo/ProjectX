@@ -89,7 +89,7 @@ interface CrontabInterface {
     event Withdraw(address indexed owner, uint256 value);
     event ActionAdded(address indexed owner, uint actionId, ActionDefinition action);
     event ConditionAdded(address indexed owner, uint conditionId, ConditionDefinition condition);
-    // event JobAdded(address indexed _owner, Job job);
+    event JobAdded(address indexed owner, uint jobId, Job job);
     // event JobModified(address indexed _owner, Job job);
     // event JobRemoved(address indexed _owner, Job job);
     // event JobExecuted(address indexed _owner, address indexed trigger, Job job);
