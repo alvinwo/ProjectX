@@ -83,7 +83,7 @@ interface CrontabInterface {
 
     function getOwner() external view returns (address);
 
-    // function triggerJob(uint jobId) external;
+    function triggerJob(uint jobId) external;
 
     event Deposit(address indexed owner, uint256 value);
     event Withdraw(address indexed owner, uint256 value);
@@ -92,5 +92,5 @@ interface CrontabInterface {
     event JobAdded(address indexed owner, uint jobId, Job job);
     // event JobModified(address indexed _owner, Job job);
     // event JobRemoved(address indexed _owner, Job job);
-    // event JobExecuted(address indexed _owner, address indexed trigger, Job job);
+    event JobExecuted(address indexed owner, address indexed trigger, uint jobId);
 }

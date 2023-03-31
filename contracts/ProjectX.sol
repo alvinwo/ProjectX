@@ -22,16 +22,16 @@ contract ProjectX is CrontabInterface {
      * @dev Throws if called by any account other than the owner.
      */
     modifier onlyOwner() {
-        require(msg.sender == _owner, 'This method is only for the owner.');
+        require(msg.sender == _owner, "This method is only for the owner.");
         _;
     }
 
-    // modifier existingValidJob(uint jobId) {
-    //     require(jobId >= 0, "jobId should be non-negative");
-    //     // require(jobs[jobId] != 0, "job should exist");
-    //     require(jobs[jobId].isValid, "job should be valid");
-    //     _;
-    // }
+    modifier existingValidJob(uint jobId) {
+        require(jobId >= 0 && jobId < _nextJobId, "The jobId doesn't exist");
+        // require(jobs[jobId] != 0, "job should exist");
+        require(_jobs[jobId].isValid, "The job should be valid.");
+        _;
+    }
 
     function createCondition(
         ConditionType conditionType,
@@ -106,19 +106,99 @@ contract ProjectX is CrontabInterface {
         uint256 value
     ) external override onlyOwner returns (bool) {
         require(_withdrawAble, "It's not allowed to withdraw.");
-        address payable self = payable(address(this));
-        uint256 balance = self.balance;
-        require(value <= balance, "The balance is not sufficient.");
+        _requireSufficientBalance(value);
         payable(msg.sender).transfer(value);
         emit Withdraw(msg.sender, value);
         return true;
+    }
+
+    function _requireSufficientBalance(uint256 value) private view {
+        address payable self = payable(address(this));
+        uint256 balance = self.balance;
+        require(value <= balance, "The balance is not sufficient.");
     }
 
     function getOwner() external view override returns (address) {
         return _owner;
     }
 
-    // function triggerJob(uint jobId) external existingValidJob(jobId) {
-    //     Job memory job = jobs[jobId];
-    // }
+    function triggerJob(uint jobId) external existingValidJob(jobId) {
+        Job memory job = _jobs[jobId];
+        _checkAllConditions(job);
+        _executeActions(job);
+        // TODO incentives
+        emit JobExecuted(_owner, msg.sender, jobId);
+    }
+
+    function _executeActions(Job memory job) private {
+        for(uint i = 0; i < job.actionList.length; i++) {
+            ActionDefinition memory action = _actions[job.actionList[i]];
+            _executeAction(action);
+        }
+    }
+
+    function _executeAction(ActionDefinition memory action) private {
+        if(action.actionType == ActionType.TRANSFER) {
+            _executeTransferAction(action);
+        } else {
+            revert();
+        }
+    }
+
+    function _executeTransferAction(ActionDefinition memory action) private {
+        _requireSufficientBalance(action.value);
+        payable(action.targetAddress).transfer(action.value);
+    }
+
+    function _checkAllConditions(Job memory job) private view {
+        for (uint i = 0; i < job.conditionsList.length; i++) {
+            ConditionDefinition memory condition = _conditions[
+                job.conditionsList[i]
+            ];
+            _checkCondition(job, condition);
+        }
+    }
+
+    function _checkCondition(
+        Job memory job,
+        ConditionDefinition memory condition
+    ) private view {
+        if (condition.conditionType == ConditionType.TIME_BASED) {
+            _checkTimeBasedCondition(job, condition);
+        } else if (condition.conditionType == ConditionType.BLOCK_BASED) {
+            _checkBlockBasedCondition(job, condition);
+        } else {
+            // TODO support contract based condition later
+            revert();
+        }
+    }
+
+    function _checkTimeBasedCondition(
+        Job memory job,
+        ConditionDefinition memory condition
+    ) private view {
+        require(
+            condition.conditionType == ConditionType.TIME_BASED,
+            "It's not a time based condition."
+        );
+        require(
+            block.timestamp - job.lastExecutionTime >= condition.timeInterval,
+            "The time based condition is't met"
+        );
+    }
+
+    function _checkBlockBasedCondition(
+        Job memory job,
+        ConditionDefinition memory condition
+    ) private view {
+        require(
+            condition.conditionType == ConditionType.BLOCK_BASED,
+            "It's not a block based condition."
+        );
+        require(
+            block.number - job.lastExecutionBlock >=
+                condition.blockNumberInterval,
+            "The block based condition is't met"
+        );
+    }
 }
