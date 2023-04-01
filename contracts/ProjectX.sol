@@ -127,6 +127,7 @@ contract ProjectX is CrontabInterface {
         _checkAllConditions(job);
         _executeActions(job);
         // TODO incentives
+        // TODO fees
         emit JobExecuted(_owner, msg.sender, jobId);
     }
 

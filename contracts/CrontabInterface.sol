@@ -69,13 +69,6 @@ interface CrontabInterface {
         uint[] memory actions
     ) external returns (uint);
 
-    // function manageJob(
-    //     uint jobId,
-    //     Job memory job,
-    //     ConditionOperator operator,
-    //     ConditionDefinition[] memory conditions
-    // ) external;
-
     function deposit() external payable;
 
     // the onwer could withdraw the deposited assets
