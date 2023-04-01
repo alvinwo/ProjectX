@@ -1,6 +1,8 @@
-const DepositWithdrawal = artifacts.require("DepositWithdrawal");
+const { accounts } = require("@openzeppelin/test-environment");
+
 const ProjectX = artifacts.require("ProjectX");
+const ProjectXFactory = artifacts.require("ProjectXFactory");
 module.exports = function (deployer) {
-    deployer.deploy(DepositWithdrawal);
-    deployer.deploy(ProjectX, true);
+    deployer.deploy(ProjectXFactory);
+    deployer.deploy(ProjectX, accounts[0], true);
 };

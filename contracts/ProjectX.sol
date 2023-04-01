@@ -4,17 +4,17 @@ pragma solidity ^0.8.0;
 import "./CrontabInterface.sol";
 
 contract ProjectX is CrontabInterface {
-    address public _owner;
-    bool _withdrawAble;
-    mapping(uint => Job) _jobs;
-    mapping(uint => ConditionDefinition) _conditions;
-    mapping(uint => ActionDefinition) _actions;
-    uint _nextJobId;
-    uint _nextConditionId;
-    uint _nextActionId;
+    address private _owner;
+    bool private _withdrawAble;
+    mapping(uint => Job) private _jobs;
+    mapping(uint => ConditionDefinition) private _conditions;
+    mapping(uint => ActionDefinition) private _actions;
+    uint private _nextJobId;
+    uint private _nextConditionId;
+    uint private _nextActionId;
 
-    constructor(bool withdrawAble) {
-        _owner = msg.sender;
+    constructor(address owner, bool withdrawAble) {
+        _owner = owner;
         _withdrawAble = withdrawAble;
     }
 
@@ -122,12 +122,12 @@ contract ProjectX is CrontabInterface {
         return _owner;
     }
 
-    function triggerJob(uint jobId) external existingValidJob(jobId) {
+    function triggerJob(uint jobId) external override existingValidJob(jobId) {
         Job memory job = _jobs[jobId];
         _checkAllConditions(job);
-        _executeActions(job);
         // TODO incentives
         // TODO fees
+        _executeActions(job);
         emit JobExecuted(_owner, msg.sender, jobId);
     }
 
