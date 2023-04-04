@@ -8,6 +8,11 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
 						"internalType": "bool",
 						"name": "withdrawAble",
 						"type": "bool"
@@ -39,9 +44,9 @@
 								"type": "uint8"
 							},
 							{
-								"internalType": "uint256",
+								"internalType": "address",
 								"name": "targetAddress",
-								"type": "uint256"
+								"type": "address"
 							},
 							{
 								"internalType": "uint256",
@@ -56,6 +61,48 @@
 					}
 				],
 				"name": "ActionAdded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "conditionId",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "enum CrontabInterface.ConditionType",
+								"name": "conditionType",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timeInterval",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "blockNumberInterval",
+								"type": "uint256"
+							}
+						],
+						"indexed": false,
+						"internalType": "struct CrontabInterface.ConditionDefinition",
+						"name": "condition",
+						"type": "tuple"
+					}
+				],
+				"name": "ConditionAdded",
 				"type": "event"
 			},
 			{
@@ -89,25 +136,109 @@
 					{
 						"indexed": false,
 						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					},
+					{
+						"components": [
+							{
+								"internalType": "bool",
+								"name": "isValid",
+								"type": "bool"
+							},
+							{
+								"internalType": "string",
+								"name": "title",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "description",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "reward",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "expiration",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastExecutionTime",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "lastExecutionBlock",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256[]",
+								"name": "conditionsList",
+								"type": "uint256[]"
+							},
+							{
+								"internalType": "uint256[]",
+								"name": "actionList",
+								"type": "uint256[]"
+							}
+						],
+						"indexed": false,
+						"internalType": "struct CrontabInterface.Job",
+						"name": "job",
+						"type": "tuple"
+					}
+				],
+				"name": "JobAdded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "trigger",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					}
+				],
+				"name": "JobExecuted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
 						"name": "value",
 						"type": "uint256"
 					}
 				],
 				"name": "Withdraw",
 				"type": "event"
-			},
-			{
-				"inputs": [],
-				"name": "_owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
 			},
 			{
 				"inputs": [
@@ -117,9 +248,9 @@
 						"type": "uint8"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "address",
 						"name": "targetAddress",
-						"type": "uint256"
+						"type": "address"
 					},
 					{
 						"internalType": "uint256",
@@ -232,6 +363,33 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "resume",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "jobId",
+						"type": "uint256"
+					}
+				],
+				"name": "triggerJob",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -279,19 +437,19 @@
 	},
 	"sources": {
 		"contracts/CrontabInterface.sol": {
-			"keccak256": "0xc3f527fccb3c07f9308c0b4cb1a20e6f4bc2270e2580bb0f571e99b9b57cc9cb",
+			"keccak256": "0x6cccc1fa2756c416ccb7f7dc753c008b017fe952df33f05e5adf37499d86730d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://11de97e773194d00c0e1619738051661aaec35c5aead32348932677e939c42fa",
-				"dweb:/ipfs/QmeyM1w6Vwjd8GsR74FavZYdxUQLjJmUannuyt36DTstKC"
+				"bzz-raw://65d2b099a6b6d52fc67543c4d6a65482fa9b050fd0d7d63d997ff0cfba5ea230",
+				"dweb:/ipfs/QmUespLmnNnMaRPrhjtgjri1Fy2tL1n3Q8UM74ABgNQTqf"
 			]
 		},
 		"contracts/ProjectX.sol": {
-			"keccak256": "0x1ae7f63494aa8f36e7577184f8f361c0247330ac0202630e09a8e77846e84698",
+			"keccak256": "0x577ab78405179155568691b718b522a7f2bce11949e33c20216a7a4b68686918",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://40103fefb4acdaefb7abbe45d54fb4f0e03357d81e4f0c4cde619abad1fa0baf",
-				"dweb:/ipfs/QmdbVK7W2jCuvgGvyt3dz3ckpBpgtJxX5HzWRRxFzJqVLZ"
+				"bzz-raw://7149f850f8f1e8db834d48015b1fa4e43a0883e96d18ceb219b81de0e15ad878",
+				"dweb:/ipfs/QmeASNRzpdCE87YAgiTdRU9erLKq5YnH92h5NzdKfTreVD"
 			]
 		}
 	},
