@@ -4,18 +4,27 @@ pragma solidity ^0.8.0;
 import "./CrontabInterface.sol";
 
 contract ProjectX is CrontabInterface {
-    address public _owner;
-    bool _withdrawAble;
-    mapping(uint => Job) _jobs;
-    mapping(uint => ConditionDefinition) _conditions;
-    mapping(uint => ActionDefinition) _actions;
-    uint _nextJobId;
-    uint _nextConditionId;
-    uint _nextActionId;
+    address private _factory;
+    address private _owner;
+    bool private _withdrawAble;
+    bool private _paused;
+    mapping(uint => Job) private _jobs;
+    mapping(uint => ConditionDefinition) private _conditions;
+    mapping(uint => ActionDefinition) private _actions;
+    uint private _nextJobId;
+    uint private _nextConditionId;
+    uint private _nextActionId;
 
-    constructor(bool withdrawAble) {
-        _owner = msg.sender;
+    constructor(address owner, bool withdrawAble) {
+        _factory = msg.sender;
+        _owner = owner;
         _withdrawAble = withdrawAble;
+        _paused = false;
+    }
+
+    modifier onlyFactory() {
+        require(msg.sender == _factory, "This method is only for the factory.");
+        _;
     }
 
     /**
@@ -23,6 +32,11 @@ contract ProjectX is CrontabInterface {
      */
     modifier onlyOwner() {
         require(msg.sender == _owner, "This method is only for the owner.");
+        _;
+    }
+
+    modifier notPaused() {
+        require(!_paused, "The contract is paused.");
         _;
     }
 
@@ -37,7 +51,7 @@ contract ProjectX is CrontabInterface {
         ConditionType conditionType,
         uint256 timeInterval,
         uint256 blockNumberInterval
-    ) external override onlyOwner returns (uint) {
+    ) external override onlyOwner notPaused returns (uint) {
         ConditionDefinition memory condition = ConditionDefinition(
             conditionType,
             timeInterval,
@@ -52,7 +66,7 @@ contract ProjectX is CrontabInterface {
         ActionType actionType,
         address targetAddress,
         uint256 value
-    ) external override onlyOwner returns (uint) {
+    ) external override onlyOwner notPaused returns (uint) {
         ActionDefinition memory action = ActionDefinition(
             actionType,
             targetAddress,
@@ -70,7 +84,7 @@ contract ProjectX is CrontabInterface {
         uint256 expiration,
         uint[] memory conditions,
         uint[] memory actions
-    ) external override onlyOwner returns (uint) {
+    ) external override onlyOwner notPaused returns (uint) {
         Job memory job = Job(
             true,
             title,
@@ -98,13 +112,13 @@ contract ProjectX is CrontabInterface {
     //     // emit JobModified(msg.sender, job);
     // }
 
-    function deposit() external payable override {
+    function deposit() external payable override notPaused {
         emit Deposit(msg.sender, msg.value);
     }
 
     function withdraw(
         uint256 value
-    ) external override onlyOwner returns (bool) {
+    ) external override onlyOwner notPaused returns (bool) {
         require(_withdrawAble, "It's not allowed to withdraw.");
         _requireSufficientBalance(value);
         payable(msg.sender).transfer(value);
@@ -122,12 +136,12 @@ contract ProjectX is CrontabInterface {
         return _owner;
     }
 
-    function triggerJob(uint jobId) external existingValidJob(jobId) {
+    function triggerJob(uint jobId) external override notPaused existingValidJob(jobId) {
         Job memory job = _jobs[jobId];
         _checkAllConditions(job);
-        _executeActions(job);
         // TODO incentives
         // TODO fees
+        _executeActions(job);
         emit JobExecuted(_owner, msg.sender, jobId);
     }
 
@@ -201,5 +215,15 @@ contract ProjectX is CrontabInterface {
                 condition.blockNumberInterval,
             "The block based condition is't met"
         );
+    }
+
+    function pause() external onlyFactory {
+        require(!_paused, "The contract is already paused.");
+        _paused = true;
+    }
+
+    function resume() external onlyFactory {
+        require(_paused, "The contract is not paused.");
+        _paused = false;
     }
 }
