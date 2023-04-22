@@ -1,7 +1,9 @@
 # Decentralized Automated Task Execution Platform
 
 Author: Alvin Wo
+
 Date: 2023-02-25
+
 Updated at: 2023-04-22
 
 ## Introduction
